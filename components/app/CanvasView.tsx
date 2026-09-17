@@ -246,20 +246,17 @@ export default function CanvasView({
   }, [activeAnnotationId, panelMode])
 
   // ── Zoom via scroll wheel ──────────────────────────────────────────────────
-  const handleWheel = useCallback(
-    (e: WheelEvent) => {
-      // ctrlKey is true for pinch gestures on trackpads — use those for zoom.
-      // Regular scroll events (ctrlKey false) are left alone so the page scrolls normally.
-      if (!e.ctrlKey) return
-      e.preventDefault()
-      const SPEED = 0.005
-      setZoom((prev) => {
-        if (prev === null) return prev
-        return Math.min(3, Math.max(0.1, prev - e.deltaY * SPEED))
-      })
-    },
-    []
-  )
+  const handleWheel = useCallback((e: WheelEvent) => {
+    // ctrlKey is true for pinch gestures on trackpads — use those for zoom.
+    // Regular scroll events (ctrlKey false) are left alone so the page scrolls normally.
+    if (!e.ctrlKey) return
+    e.preventDefault()
+    const SPEED = 0.005
+    setZoom((prev) => {
+      if (prev === null) return prev
+      return Math.min(3, Math.max(0.1, prev - e.deltaY * SPEED))
+    })
+  }, [])
 
   useEffect(() => {
     const el = containerRef.current
@@ -402,8 +399,15 @@ export default function CanvasView({
                   min={20}
                   max={100}
                   value={Math.round(markerOpacity * 100)}
-                  onChange={(e) => setMarkerOpacity(Number(e.target.value) / 100)}
-                  style={{ width: '110px', accentColor: '#5578F0', cursor: 'pointer', display: 'block' }}
+                  onChange={(e) =>
+                    setMarkerOpacity(Number(e.target.value) / 100)
+                  }
+                  style={{
+                    width: '110px',
+                    accentColor: '#5578F0',
+                    cursor: 'pointer',
+                    display: 'block',
+                  }}
                 />
               </div>
 
@@ -412,9 +416,13 @@ export default function CanvasView({
                 title={markersVisible ? 'Hide markers' : 'Show markers'}
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] transition-colors duration-150"
                 style={{
-                  background: markersVisible ? 'rgba(45,62,158,0.15)' : 'rgba(0,0,0,0.06)',
+                  background: markersVisible
+                    ? 'rgba(45,62,158,0.15)'
+                    : 'rgba(0,0,0,0.06)',
                   color: markersVisible ? '#6b82e8' : 'var(--text-muted)',
-                  border: markersVisible ? '1px solid rgba(45,62,158,0.35)' : '1px solid var(--border)',
+                  border: markersVisible
+                    ? '1px solid rgba(45,62,158,0.35)'
+                    : '1px solid var(--border)',
                   fontFamily: 'var(--font-ui)',
                 }}
               >
