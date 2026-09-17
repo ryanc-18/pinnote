@@ -4,9 +4,11 @@
 // Components import these functions instead of writing fetch() calls directly.
 //
 
+import type { Folder, Note } from '@/generated/prisma/client'
+
 // ── Folders ───────────────────────────────────────────────────────────────────
 
-export async function getWorkspaceData(): Promise<{ folders: any[]; rootNotes: any[] }> {
+export async function getWorkspaceData(): Promise<{ folders: (Folder & { notes: Note[] })[]; rootNotes: Note[] }> {
   const res = await fetch('/api/folders')
   if (!res.ok) throw new Error('Failed to load workspace')
   return res.json()
